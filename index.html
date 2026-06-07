@@ -1,1 +1,89 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Mapa Operacional V2 - Cisternas Bayamón</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/><link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/><link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/><link rel="stylesheet" href="styles.css"></head><body><div id="layout"><aside id="panel"><div class="brand"><div class="badge">V2</div><h1>Mapa Operacional de Cisternas</h1><p>Bayamón · Vista limpia por prioridad, sector y estado.</p></div><section class="card"><h2>Resumen visible</h2><div class="grid"><div><strong id="totalVisible">0</strong><span>Total</span></div><div><strong id="pendientes">0</strong><span>Pendientes</span></div><div><strong id="enRuta">0</strong><span>En ruta</span></div><div><strong id="entregadas">0</strong><span>Entregadas</span></div></div></section><section class="card"><h2>Filtros</h2><label>Buscar</label><input id="q" placeholder="PIN, nombre, teléfono, sector o dirección"><label>Categoría</label><div class="checks"><label><input type="checkbox" class="cat" value="Impedimento / encamados" checked><i class="red"></i> Impedimento / encamados</label><label><input type="checkbox" class="cat" value="Mayores de 60 años" checked><i class="orange"></i> Mayores de 60 años</label><label><input type="checkbox" class="cat" value="Hogares con niños" checked><i class="blue"></i> Hogares con niños</label><label><input type="checkbox" class="cat" value="Otros registros" checked><i class="gray"></i> Otros registros</label></div><label>Sector</label><select id="sector"><option value="">Todos los sectores</option></select><label>Estado</label><select id="estado"><option value="">Todos</option><option>Pendiente</option><option>En ruta</option><option>Entregada</option><option>No localizado</option></select><label>Vista del mapa</label><select id="viewMode"><option value="cluster">Agrupado / limpio</option><option value="points">Puntos individuales</option><option value="pins">Mostrar PINs</option></select><div class="actions"><button onclick="resetAll()">Limpiar</button><button onclick="fitVisible()">Ver visibles</button><button onclick="priorityOnly()">Prioridad</button><button onclick="exportCSV()">Exportar CSV</button></div></section><section class="card results"><h2>Listado visible</h2><p id="countText"></p><div id="list"></div></section></aside><main id="map"></main></div><div class="legend"><b>Leyenda</b><span><i class="red"></i> Impedimento</span><span><i class="orange"></i> Mayor 60</span><span><i class="blue"></i> Niños</span><span><i class="gray"></i> Otros</span></div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mapa Ejecutivo V3 - Cisternas Bayamón</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="layout">
+  <aside id="panel">
+    <div class="brand">
+      <div class="badge">V3</div>
+      <h1>Mapa Ejecutivo de Cisternas</h1>
+      <p>Bayamón · Vista por zonas, prioridad y operación de entrega.</p>
+    </div>
+
+    <section class="card">
+      <h2>Resumen visible</h2>
+      <div class="grid">
+        <div><strong id="totalVisible">0</strong><span>Total</span></div>
+        <div><strong id="zonasVisible">0</strong><span>Zonas</span></div>
+        <div><strong id="pendientes">0</strong><span>Pendientes</span></div>
+        <div><strong id="entregadas">0</strong><span>Entregadas</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Control operacional</h2>
+      <label>Buscar</label>
+      <input id="q" placeholder="PIN, nombre, teléfono, sector o dirección">
+
+      <label>Categoría</label>
+      <div class="checks">
+        <label><input type="checkbox" class="cat" value="Impedimento / encamados" checked><i class="red"></i> Impedimento / encamados</label>
+        <label><input type="checkbox" class="cat" value="Mayores de 60 años" checked><i class="orange"></i> Mayores de 60 años</label>
+        <label><input type="checkbox" class="cat" value="Hogares con niños" checked><i class="blue"></i> Hogares con niños</label>
+        <label><input type="checkbox" class="cat" value="Otros registros" checked><i class="gray"></i> Otros registros</label>
+      </div>
+
+      <label>Sector</label>
+      <select id="sector"><option value="">Todos los sectores</option></select>
+
+      <label>Estado</label>
+      <select id="estado">
+        <option value="">Todos</option>
+        <option>Pendiente</option>
+        <option>En ruta</option>
+        <option>Entregada</option>
+        <option>No localizado</option>
+      </select>
+
+      <label>Vista</label>
+      <select id="mode">
+        <option value="zones">Vista ejecutiva por zonas</option>
+        <option value="priority">Solo zonas prioritarias</option>
+        <option value="points">Puntos individuales</option>
+      </select>
+
+      <div class="actions">
+        <button onclick="resetAll()">Limpiar</button>
+        <button onclick="fitVisible()">Ver visibles</button>
+        <button onclick="exportCSV()">Exportar CSV</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Listado operacional</h2>
+      <p id="countText"></p>
+      <div id="list"></div>
+    </section>
+  </aside>
+  <main id="map"></main>
+</div>
+
+<div class="legend">
+  <b>V3 — Leyenda</b>
+  <span><i class="red"></i> Impedimento</span>
+  <span><i class="orange"></i> Mayor 60</span>
+  <span><i class="blue"></i> Niños</span>
+  <span><i class="gray"></i> Otros</span>
+  <small>La vista inicial agrupa casos por zona. Los puntos individuales se activan desde “Vista”.</small>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

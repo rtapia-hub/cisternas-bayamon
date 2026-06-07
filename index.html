@@ -4,15 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Centro Operacional Cisternas y Agua — Bayamón</title>
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
 <style>
 html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:#172033}
 #app{display:flex;height:100vh;width:100vw;overflow:hidden}
-#side{width:460px;min-width:360px;overflow:auto;background:white;border-right:1px solid #ddd;box-shadow:2px 0 8px #0002;z-index:9}
+#side{width:470px;min-width:360px;overflow:auto;background:white;border-right:1px solid #ddd;box-shadow:2px 0 8px #0002;z-index:9}
 #map{flex:1;height:100vh}
 .head{background:#0b2c5f;color:white;padding:16px}
 .head h1{font-size:18px;margin:0;line-height:1.2}
@@ -34,7 +36,6 @@ textarea{height:65px}
 .checkrow input{width:auto}
 .dot{width:13px;height:13px;border-radius:50%;display:inline-block;border:1px solid #444}
 .buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.buttons.three{grid-template-columns:1fr 1fr 1fr}
 button{border:0;border-radius:7px;padding:10px;font-weight:bold;cursor:pointer;font-size:12px}
 .b1{background:#0b2c5f;color:white}.b2{background:#e8eef7;color:#0b2c5f}.b3{background:#0891b2;color:white}.b4{background:#16803c;color:white}.b5{background:#e11d48;color:white}.b6{background:#7c3aed;color:white}.b7{background:#f59e0b;color:white}
 .bar{font-size:12px;padding:10px 16px;background:#f8fafc;border-bottom:1px solid #e6e9ee;color:#344054}
@@ -43,38 +44,51 @@ button{border:0;border-radius:7px;padding:10px;font-weight:bold;cursor:pointer;f
 .title{font-size:13px;font-weight:bold;color:#0b2c5f}
 .meta{font-size:12px;color:#475467;margin-top:3px;line-height:1.35}
 .badge{display:inline-block;border-radius:999px;padding:2px 7px;font-size:11px;font-weight:bold;background:#eef2ff;color:#1e3a8a;margin:2px 4px 2px 0}
-.waterbadge{background:#cffafe;color:#0e7490}.donebadge{background:#dcfce7;color:#166534}.critb{background:#ffe4e6;color:#be123c}.assignbadge{background:#ede9fe;color:#5b21b6}.selectbadge{background:#dbeafe;color:#1d4ed8}.blackbadge{background:#111827;color:#fff}
+.waterbadge{background:#cffafe;color:#0e7490}
+.donebadge{background:#dcfce7;color:#166534}
+.deliveredbadge{background:#e0f2fe;color:#0369a1}
+.critb{background:#ffe4e6;color:#be123c}
+.assignbadge{background:#ede9fe;color:#5b21b6}
+.selectbadge{background:#dbeafe;color:#1d4ed8}
+.blackbadge{background:#111827;color:#fff}
 .pin{color:white;border:2px solid white;border-radius:14px;box-shadow:0 1px 4px #0006;font-weight:bold;text-align:center;line-height:24px;min-width:34px;height:24px;font-size:11px;padding:0 4px}
-.popup{font-size:13px;width:330px}
+.popup{font-size:13px;width:340px}
 .popup h3{margin:0 0 6px;color:#0b2c5f}
 .popup table{border-collapse:collapse;width:100%}
 .popup td{border-bottom:1px solid #edf0f5;padding:4px 2px;vertical-align:top}
-.popup td:first-child{font-weight:bold;width:122px;color:#344054}
+.popup td:first-child{font-weight:bold;width:128px;color:#344054}
 .small{font-size:11px;color:#667085;line-height:1.38}
 .rule{background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:10px;font-size:12px;line-height:1.38;color:#7c2d12}
+.info{background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:10px;font-size:12px;line-height:1.38;color:#1e3a8a;margin-top:8px}
 details{border:1px solid #e3e8ef;border-radius:8px;padding:8px;background:#fbfdff;margin-top:10px}
 summary{cursor:pointer;font-weight:bold;color:#0b2c5f;font-size:12px}
 .teamgrid{display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px}
 .teamgrid input{font-size:12px}
-.legend{position:absolute;right:18px;bottom:18px;background:white;padding:12px;border:1px solid #cfd7e3;border-radius:10px;z-index:800;box-shadow:0 2px 10px #0002;font-size:12px;max-width:250px}
+.legend{position:absolute;right:18px;bottom:18px;background:white;padding:12px;border:1px solid #cfd7e3;border-radius:10px;z-index:800;box-shadow:0 2px 10px #0002;font-size:12px;max-width:260px}
 .legend span{display:block;margin-top:6px}
 .legend .small{margin-top:8px}
-@media(max-width:850px){#app{flex-direction:column}#side{width:100%;min-width:0;height:49vh;border-right:0;border-bottom:1px solid #ddd}#map{height:51vh}.legend{display:none}.buttons.three{grid-template-columns:1fr 1fr}}
+@media(max-width:850px){#app{flex-direction:column}#side{width:100%;min-width:0;height:50vh;border-right:0;border-bottom:1px solid #ddd}#map{height:50vh}.legend{display:none}}
 </style>
 </head>
+
 <body>
 <div id="app">
 <aside id="side">
   <div class="head">
     <h1>Centro Operacional de Cisternas y Agua — Bayamón</h1>
-    <p>Selección, asignación, instalación, validación, solicitud de agua, llenado y recargas.</p>
+    <p>Selección, asignación, entrega, instalación, validación, solicitud de agua, llenado y recargas.</p>
   </div>
 
   <div class="sec">
     <div class="rule">
       <b>Regla operacional:</b><br>
       WhatsApp coordina. El mapa documenta.<br>
-      Si un cambio afecta el estado de un caso, debe reflejarse en este mapa.
+      Si un cambio afecta el estado operacional de un caso, debe reflejarse en este mapa.
+    </div>
+    <div class="info">
+      <b>Reporta / ERP corre paralelo:</b><br>
+      Cuando se entrega la cisterna, el registrador recopila los datos en Reporta para el envío formal al ERP.
+      En la validación también se documenta en Reporta. Este mapa coordina el trabajo operacional de campo.
     </div>
   </div>
 
@@ -84,6 +98,7 @@ summary{cursor:pointer;font-weight:bold;color:#0b2c5f;font-size:12px}
       <div class="kpi"><div class="num" id="total">0</div><div class="label">Total visible</div></div>
       <div class="kpi"><div class="num" id="seleccionados">0</div><div class="label">Seleccionados para entrega</div></div>
       <div class="kpi purple"><div class="num" id="asignados">0</div><div class="label">Asignados a equipo</div></div>
+      <div class="kpi water"><div class="num" id="entregadas">0</div><div class="label">Cisternas entregadas</div></div>
       <div class="kpi green"><div class="num" id="instaladas">0</div><div class="label">Instalación completada</div></div>
       <div class="kpi green"><div class="num" id="validadas">0</div><div class="label">Instalación validada</div></div>
       <div class="kpi water"><div class="num" id="aguaSolicitada">0</div><div class="label">Agua solicitada</div></div>
@@ -124,15 +139,17 @@ summary{cursor:pointer;font-weight:bold;color:#0b2c5f;font-size:12px}
       <button class="b1" onclick="fitVisible()">Ver visibles</button>
       <button class="b1" onclick="showStatus('Seleccionado para entrega')">Disponibles</button>
       <button class="b6" onclick="showStatus('Asignado a equipo')">Asignados</button>
+      <button class="b3" onclick="showStatus('Cisterna entregada')">Entregadas</button>
       <button class="b3" onclick="showWaterOps()">AMMEAD agua</button>
       <button class="b7" onclick="showRecargas()">Recargas</button>
+      <button class="b5" onclick="showCritical()">Críticos</button>
       <button class="b4" onclick="exportVisibleCSV()">Exportar CSV</button>
       <button class="b4" onclick="copyVisibleText()">Copiar WhatsApp</button>
     </div>
 
     <details>
       <summary>Configurar nombres de equipos</summary>
-      <div class="small">Use estos campos para que el equipo aparezca con nombre operacional. Ejemplo: "Ricky Distributor / Tec. RT".</div>
+      <div class="small">Use estos campos para que el equipo aparezca con nombre operacional. Ejemplo: “Equipo 1 — Ricky Distributor / Tec. RT”.</div>
       <div class="teamgrid" id="teamConfig"></div>
       <button class="b1" style="margin-top:8px;width:100%" onclick="saveTeamLabels()">Guardar nombres de equipos</button>
     </details>
@@ -143,9 +160,9 @@ summary{cursor:pointer;font-weight:bold;color:#0b2c5f;font-size:12px}
   <div class="sec">
     <h2>Roles y responsabilidades</h2>
     <div class="small">
-      <b>Planificador / Project Manager:</b> Pendiente → Seleccionado para entrega → Asignado a equipo.<br><br>
-      <b>Equipo de instalación:</b> consulta el mapa, ejecuta la instalación y reporta evidencia. No cambia estados.<br><br>
-      <b>Registradores:</b> Instalación completada → Instalación validada → Agua solicitada.<br><br>
+      <b>Planificador / Project Manager:</b> Pendiente → Seleccionado para entrega → Asignado a equipo.<br><br><b>Corrección por error:</b> si un caso fue seleccionado por error, use Estado operacional → Sin seleccionar.<br><br>
+      <b>Equipos de instalación:</b> consultan el mapa, entregan e instalan la cisterna, y reportan evidencia. No cambian estados.<br><br>
+      <b>Registradores:</b> registran en Reporta la entrega para ERP; en este mapa actualizan Cisterna entregada → Instalación completada → Instalación validada → Agua solicitada.<br><br>
       <b>AMMEAD:</b> Agua solicitada → Programada para llenado → Cisterna llena; y manejo de recargas.
     </div>
   </div>
@@ -157,14 +174,12 @@ summary{cursor:pointer;font-weight:bold;color:#0b2c5f;font-size:12px}
 
   <div class="sec">
     <div class="small">
-      Registros cargados: 960.
-      Casos críticos exactos, encamados = Sí y cisterna = No: 11.
-      Generado: 2026-06-07 04:46.
-      <br><br>
-      Nota: los cambios se guardan en este navegador. Para coordinación multiusuario en emergencia, use el mapa como registro visual y documente las actualizaciones oficiales según el procedimiento acordado.
+      Registros cargados desde el archivo operacional seleccionado. 
+      Recordatorio: WhatsApp coordina, el mapa documenta y Reporta/ERP corre paralelo para la documentación formal.
     </div>
   </div>
 </aside>
+
 <main id="map"></main>
 </div>
 
@@ -172,6 +187,7 @@ summary{cursor:pointer;font-weight:bold;color:#0b2c5f;font-size:12px}
   <b>Leyenda operacional</b>
   <span><span class="dot" style="background:#2563eb"></span> Seleccionado para entrega</span>
   <span><span class="dot" style="background:#7c3aed"></span> Asignado a equipo</span>
+  <span><span class="dot" style="background:#0ea5e9"></span> Cisterna entregada</span>
   <span><span class="dot" style="background:#16a34a"></span> Instalado / validado / lleno</span>
   <span><span class="dot" style="background:#0891b2"></span> Agua / AMMEAD</span>
   <span><span class="dot" style="background:#111827"></span> No localizado</span>
@@ -184,8 +200,10 @@ const DATA=[{"objectid": 457, "orden": 1, "lat": 18.35098346100006, "lon": -66.1
 const CATEGORY_COLORS={"Encamado":"#d7191c","Equipo de asistencia":"#7c3aed","Mayores de 60":"#f59e0b","Casas con niños":"#2b83ba","Otros":"#595959"};
 const STATES=[
   "Pendiente",
+  "Sin seleccionar",
   "Seleccionado para entrega",
   "Asignado a equipo",
+  "Cisterna entregada",
   "Instalación completada",
   "Instalación validada",
   "Agua solicitada",
@@ -204,9 +222,9 @@ const CLOSED_STATES=["Cisterna llena","Recarga completada","Caso cerrado"];
 const TEAM_CODES=["Equipo 1","Equipo 2","Equipo 3","Equipo 4","Equipo 5","Equipo 6","Equipo 7","Equipo 8","Equipo 9","Equipo 10","Equipo 11","Equipo 12"];
 const ROLES=["","Planificador","Project Manager","Registrador 1","Registrador 2","AMMEAD","Otro"];
 
-const KEY="cisternas_bayamon_operacion_lunes_v1";
+const KEY="cisternas_bayamon_operacion_lunes_v3";
 const OLD_KEY="cisternas_bayamon_entrega_agua_v2";
-const TEAM_KEY="cisternas_bayamon_team_labels_v1";
+const TEAM_KEY="cisternas_bayamon_team_labels_v3";
 
 let quickFilter="";
 let state=loadState();
@@ -216,7 +234,6 @@ function loadState(){
   let current=JSON.parse(localStorage.getItem(KEY)||"{}");
   if(Object.keys(current).length) return current;
 
-  // Migración básica desde la versión anterior, si existe en este navegador.
   try{
     let old=JSON.parse(localStorage.getItem(OLD_KEY)||"{}");
     let migrated={};
@@ -224,9 +241,10 @@ function loadState(){
       let estado="Pendiente";
       if(v.aguaCompletada) estado="Cisterna llena";
       else if(v.requiereAgua) estado="Agua solicitada";
-      else if(v.flujo==="Cisterna entregada") estado="Instalación validada";
+      else if(v.flujo==="Cisterna entregada") estado="Cisterna entregada";
       else if(v.flujo==="No localizado") estado="No localizado";
-      migrated[id]={estado:estado,equipo:"",nota:v.nota||"",actualizado:"Migrado",historial:[{fecha:"Migrado",estado:estado,por:""}]};
+      else if(v.flujo==="Pendiente entrega") estado="Pendiente";
+      migrated[id]={estado:estado,equipo:"",nota:v.nota||"",actualizado:"Migrado",actualizadoPor:"",historial:[{fecha:"Migrado",estado:estado,por:""}]};
     });
     if(Object.keys(migrated).length){
       localStorage.setItem(KEY,JSON.stringify(migrated));
@@ -235,56 +253,35 @@ function loadState(){
   }catch(e){}
   return {};
 }
-
-function saveAll(){
-  localStorage.setItem(KEY,JSON.stringify(state));
-}
-
-function dflt(){
-  return {estado:"Pendiente",equipo:"",nota:"",actualizado:"",actualizadoPor:"",historial:[]};
-}
-
-function ds(id){
-  return {...dflt(),...(state[id]||{})};
-}
-
+function saveAll(){ localStorage.setItem(KEY,JSON.stringify(state)); }
+function dflt(){return {estado:"Pendiente",equipo:"",nota:"",actualizado:"",actualizadoPor:"",historial:[]}}
+function ds(id){return {...dflt(),...(state[id]||{})}}
 function ss(id,patch){
   let before=ds(id);
   let now=new Date().toLocaleString();
   let next={...before,...patch,actualizado:now};
   if(patch.estado && patch.estado!==before.estado){
-    next.historial=[...(before.historial||[]),{fecha:now,estado:patch.estado,por:next.actualizadoPor||""}].slice(-12);
+    next.historial=[...(before.historial||[]),{fecha:now,estado:patch.estado,por:patch.actualizadoPor||before.actualizadoPor||""}].slice(-20);
   }
   state[id]=next;
   saveAll();
-  refreshEquipoFilterOptions();
   applyFilters();
 }
-
-let map=L.map('map').setView([18.37,-66.17],12);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
-let cluster=L.markerClusterGroup({showCoverageOnHover:false,spiderfyOnMaxZoom:true,disableClusteringAtZoom:17});
-map.addLayer(cluster);
-let markers=new Map();
-
 function el(id){return document.getElementById(id)}
 function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function estado(r){return ds(r.objectid).estado||"Pendiente"}
 function equipo(r){return ds(r.objectid).equipo||""}
-function displayEquipo(code){
-  if(!code) return "Sin asignar";
-  let label=teamLabels[code]||"";
-  return label ? `${code} — ${label}` : code;
-}
+function displayEquipo(code){ if(!code) return "Sin equipo"; let label=teamLabels[code]||""; return label ? `${code} — ${label}` : code; }
 function nextRoleFor(st){
   if(["Pendiente","Seleccionado para entrega","Asignado a equipo"].includes(st)) return "Planificador / Project Manager";
-  if(["Instalación completada","Instalación validada","Agua solicitada"].includes(st)) return "Registradores";
+  if(["Cisterna entregada","Instalación completada","Instalación validada","Agua solicitada"].includes(st)) return "Registradores";
   if(["Programada para llenado","Cisterna llena","Requiere recarga","Recarga solicitada","Programada para recarga","Recarga completada"].includes(st)) return "AMMEAD";
   return "Supervisión";
 }
 function badgeForStatus(st){
   if(st==="Seleccionado para entrega") return "selectbadge";
   if(st==="Asignado a equipo") return "assignbadge";
+  if(st==="Cisterna entregada") return "deliveredbadge";
   if(WATER_STATES.includes(st)) return "waterbadge";
   if(CLOSED_STATES.includes(st)||st==="Instalación completada"||st==="Instalación validada") return "donebadge";
   if(st==="No localizado") return "blackbadge";
@@ -296,27 +293,32 @@ function markerColor(r){
   if(st==="Caso cerrado") return "#64748b";
   if(st==="Seleccionado para entrega") return "#2563eb";
   if(st==="Asignado a equipo") return "#7c3aed";
+  if(st==="Cisterna entregada") return "#0ea5e9";
   if(["Instalación completada","Instalación validada"].includes(st)) return "#16a34a";
   if(WATER_STATES.includes(st)) return "#0891b2";
   if(["Cisterna llena","Recarga completada"].includes(st)) return "#15803d";
   if(r.critico) return "#be123c";
   return CATEGORY_COLORS[r.categoria]||"#595959";
 }
+
+let map=L.map('map').setView([18.37,-66.17],12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+let cluster=L.markerClusterGroup({showCoverageOnHover:false,spiderfyOnMaxZoom:true,disableClusteringAtZoom:17});
+map.addLayer(cluster);
+let markers=new Map();
+
 function icon(r){
   let color=markerColor(r);
   return L.divIcon({className:"",html:`<div class="pin" style="background:${color}">${r.objectid}</div>`,iconSize:[46,24],iconAnchor:[23,12],popupAnchor:[0,-12]});
 }
-function optionList(values,current,blankLabel){
-  let html="";
-  if(blankLabel!==undefined) html+=`<option value="">${blankLabel}</option>`;
-  values.forEach(v=>{html+=`<option value="${esc(v)}" ${v===current?"selected":""}>${esc(v)}</option>`});
-  return html;
+function optionList(values,current){
+  return values.map(v=>`<option value="${esc(v)}" ${v===current?"selected":""}>${esc(v)}</option>`).join("");
 }
 function roleOptions(current){
   return ROLES.map(v=>`<option value="${esc(v)}" ${v===current?"selected":""}>${v?esc(v):"Seleccione rol"}</option>`).join("");
 }
 function teamOptions(current){
-  let html=`<option value="" ${!current?"selected":""}>Sin asignar</option>`;
+  let html=`<option value="" ${!current?"selected":""}>Sin equipo</option>`;
   TEAM_CODES.forEach(c=>html+=`<option value="${esc(c)}" ${c===current?"selected":""}>${esc(displayEquipo(c))}</option>`);
   return html;
 }
@@ -328,10 +330,11 @@ function historialHtml(st){
 function popup(r){
   let st=ds(r.objectid), e=st.estado||"Pendiente";
   let crit=r.critico?'<span class="badge critb">ENCAMADO SÍ + CISTERNA NO</span><br>':'';
-  let water=WATER_STATES.includes(e)?'<span class="badge waterbadge">AMMEAD / AGUA PENDIENTE</span><br>':'';
+  let water=WATER_STATES.includes(e)?'<span class="badge waterbadge">AMMEAD / AGUA</span><br>':'';
+  let reporta=(e==="Cisterna entregada"||e==="Instalación validada")?'<span class="badge deliveredbadge">Registrar en Reporta / ERP</span><br>':'';
   return `<div class="popup">
     <h3>OBJECTID ${r.objectid}</h3>
-    ${crit}${water}
+    ${crit}${water}${reporta}
     <table>
       <tr><td>Orden</td><td>${r.orden}</td></tr>
       <tr><td>Estado</td><td><b>${esc(e)}</b></td></tr>
@@ -357,18 +360,22 @@ function popup(r){
     <select id="rol_${r.objectid}">${roleOptions(st.actualizadoPor||"")}</select>
 
     <label>Observaciones</label>
-    <textarea id="nota_${r.objectid}" placeholder="Ej. instalación completada, falta acceso, agua solicitada a AMMEAD...">${esc(st.nota||"")}</textarea>
+    <textarea id="nota_${r.objectid}" placeholder="Ej. cisterna entregada, Reporta actualizado, instalación completada, agua solicitada a AMMEAD...">${esc(st.nota||"")}</textarea>
 
     <div class="buttons">
+      <button class="b2" onclick="quickStatus(${r.objectid},'Sin seleccionar')">Sin seleccionar</button>
       <button class="b1" onclick="quickStatus(${r.objectid},'Seleccionado para entrega')">Seleccionar</button>
       <button class="b6" onclick="quickStatus(${r.objectid},'Asignado a equipo')">Asignar</button>
+      <button class="b3" onclick="quickStatus(${r.objectid},'Cisterna entregada')">Entregada</button>
+      <button class="b4" onclick="quickStatus(${r.objectid},'Instalación completada')">Instalada</button>
       <button class="b4" onclick="quickStatus(${r.objectid},'Instalación validada')">Validar</button>
       <button class="b3" onclick="quickStatus(${r.objectid},'Agua solicitada')">Solicitar agua</button>
+      <button class="b3" onclick="quickStatus(${r.objectid},'Programada para llenado')">Programar agua</button>
       <button class="b4" onclick="quickStatus(${r.objectid},'Cisterna llena')">Llena</button>
+      <button class="b7" onclick="quickStatus(${r.objectid},'Requiere recarga')">Requiere recarga</button>
       <button class="b5" onclick="quickStatus(${r.objectid},'No localizado')">No localizado</button>
+      <button class="b1" onclick="savePopupDetails(${r.objectid})">Guardar</button>
     </div>
-
-    <button class="b1" style="margin-top:8px;width:100%" onclick="savePopupDetails(${r.objectid})">Guardar observación / rol</button>
 
     <details>
       <summary>Historial local</summary>
@@ -379,7 +386,9 @@ function popup(r){
 function saveEstado(id){
   let st=el("estado_"+id)?.value||"Pendiente";
   let rol=el("rol_"+id)?.value||ds(id).actualizadoPor||"";
-  ss(id,{estado:st,actualizadoPor:rol});
+  let patch={estado:st,actualizadoPor:rol};
+  if(st==="Sin seleccionar") patch.equipo="";
+  ss(id,patch);
 }
 function saveEquipo(id){
   let eq=el("equipo_"+id)?.value||"";
@@ -389,6 +398,7 @@ function saveEquipo(id){
 function savePopupDetails(id){
   let estadoVal=el("estado_"+id)?.value||ds(id).estado;
   let equipoVal=el("equipo_"+id)?.value||ds(id).equipo;
+  if(estadoVal==="Sin seleccionar") equipoVal="";
   let rolVal=el("rol_"+id)?.value||"";
   let notaVal=el("nota_"+id)?.value||"";
   ss(id,{estado:estadoVal,equipo:equipoVal,actualizadoPor:rolVal,nota:notaVal});
@@ -396,6 +406,7 @@ function savePopupDetails(id){
 function quickStatus(id,st){
   let rol=el("rol_"+id)?.value||ds(id).actualizadoPor||"";
   let equipoVal=el("equipo_"+id)?.value||ds(id).equipo||"";
+  if(st==="Sin seleccionar") equipoVal="";
   let notaVal=el("nota_"+id)?.value||ds(id).nota||"";
   ss(id,{estado:st,equipo:equipoVal,actualizadoPor:rol,nota:notaVal});
 }
@@ -403,14 +414,8 @@ function text(r){
   let st=ds(r.objectid);
   return `${r.objectid} ${r.orden} ${r.nombre} ${r.telefono} ${r.sector} ${r.calle} ${r.estructura} ${r.categoria} ${r.encamados} ${r.cisterna} ${st.estado} ${st.equipo} ${displayEquipo(st.equipo)} ${st.nota}`.toLowerCase();
 }
-function cats(){
-  return Array.from(document.querySelectorAll(".cat:checked")).map(x=>x.value);
-}
-function passCis(r,v){
-  if(!v) return true;
-  if(v==="blank") return !r.cisterna;
-  return r.cisterna===v;
-}
+function cats(){return Array.from(document.querySelectorAll(".cat:checked")).map(x=>x.value)}
+function passCis(r,v){if(!v)return true;if(v==="blank")return !r.cisterna;return r.cisterna===v}
 function passQuick(r){
   let st=estado(r);
   if(!quickFilter) return true;
@@ -453,6 +458,7 @@ function update(rows){
   el("total").textContent=rows.length;
   el("seleccionados").textContent=counts["Seleccionado para entrega"]||0;
   el("asignados").textContent=counts["Asignado a equipo"]||0;
+  el("entregadas").textContent=counts["Cisterna entregada"]||0;
   el("instaladas").textContent=counts["Instalación completada"]||0;
   el("validadas").textContent=counts["Instalación validada"]||0;
   el("aguaSolicitada").textContent=counts["Agua solicitada"]||0;
@@ -480,46 +486,22 @@ function update(rows){
   if(rows.length>250){
     let more=document.createElement("div");
     more.className="small";
-    more.textContent=`Mostrando los primeros 250 de ${rows.length}. Use filtros o búsqueda para reducir resultados.`;
+    more.textContent=`Mostrando los primeros 250 de ${rows.length} registros visibles. Use filtros o búsqueda para reducir.`;
     list.appendChild(more);
   }
 }
-function fitVisible(){
-  let rows=filtered();
-  if(rows.length) map.fitBounds(L.latLngBounds(rows.map(r=>[r.lat,r.lon])).pad(.08));
-}
-function clearQuick(){quickFilter="";}
+function fitVisible(){let rows=filtered();if(rows.length)map.fitBounds(L.latLngBounds(rows.map(r=>[r.lat,r.lon])).pad(.08))}
 function resetFilters(){
-  quickFilter="";
-  el("q").value="";
-  el("sector").value="";
-  el("cisterna").value="";
-  el("critico").value="";
-  el("estadoFiltro").value="";
-  el("equipoFiltro").value="";
+  el("q").value="";el("sector").value="";el("cisterna").value="";el("critico").value="";el("estadoFiltro").value="";el("equipoFiltro").value="";
   document.querySelectorAll(".cat").forEach(x=>x.checked=true);
-  applyFilters();
-  fitVisible();
-}
-function showStatus(st){
   quickFilter="";
-  el("estadoFiltro").value=st;
-  applyFilters();
-  fitVisible();
+  applyFilters();fitVisible();
 }
-function showWaterOps(){
-  quickFilter="agua";
-  el("estadoFiltro").value="";
-  applyFilters();
-  fitVisible();
-}
-function showRecargas(){
-  quickFilter="recarga";
-  el("estadoFiltro").value="";
-  applyFilters();
-  fitVisible();
-}
-function visibleRows(){return filtered();}
+function showCritical(){el("critico").value="1";el("estadoFiltro").value="";quickFilter="";applyFilters();fitVisible()}
+function showStatus(st){el("estadoFiltro").value=st;quickFilter="";applyFilters();fitVisible()}
+function showWaterOps(){quickFilter="agua";el("estadoFiltro").value="";applyFilters();fitVisible()}
+function showRecargas(){quickFilter="recarga";el("estadoFiltro").value="";applyFilters();fitVisible()}
+function visibleRows(){return filtered()}
 function exportVisibleCSV(){
   let rows=visibleRows();
   let headers=["OBJECTID","ORDEN","ESTADO","EQUIPO","EQUIPO_NOMBRE","ACTUALIZADO_POR","NOMBRE","TELEFONO","SECTOR","CALLE","ESTRUCTURA","CATEGORIA","ENCAMADOS","CISTERNA_TABLA","CRITICO","MAYORES60","MENORES17","OBSERVACION","LAT","LON"];
@@ -547,22 +529,12 @@ function copyVisibleText(){
   let t=lines.join("\n");
   navigator.clipboard.writeText(t).then(()=>alert("Texto copiado para WhatsApp.")).catch(()=>prompt("Copie este texto:",t));
 }
-function copyAMMEADText(){
-  let rows=DATA.filter(r=>WATER_STATES.includes(estado(r))).sort((a,b)=>a.orden-b.orden);
-  let lines=["AMMEAD - Solicitudes de agua / recargas pendientes","Total: "+rows.length,""];
-  rows.slice(0,80).forEach(r=>{
-    let st=ds(r.objectid);
-    lines.push(`OBJECTID ${r.objectid} | ${st.estado} | ${r.nombre||"Sin nombre"} | ${r.sector} | ${r.calle} ${r.estructura} | Tel: ${r.telefono||""}${st.nota?" | Nota: "+st.nota:""}`);
-  });
-  let t=lines.join("\n");
-  navigator.clipboard.writeText(t).then(()=>alert("Texto AMMEAD copiado para WhatsApp.")).catch(()=>prompt("Copie este texto:",t));
-}
 function refreshEquipoFilterOptions(){
   let selected=el("equipoFiltro")?.value||"";
   if(!el("equipoFiltro")) return;
   let used=new Set();
   Object.values(state).forEach(s=>{if(s.equipo) used.add(s.equipo)});
-  let opts=`<option value="">Todos los equipos</option><option value="SIN">Sin asignar</option>`;
+  let opts=`<option value="">Todos los equipos</option><option value="SIN">Sin equipo</option>`;
   TEAM_CODES.forEach(c=>opts+=`<option value="${esc(c)}">${esc(displayEquipo(c))}</option>`);
   Array.from(used).filter(c=>!TEAM_CODES.includes(c)).sort().forEach(c=>opts+=`<option value="${esc(c)}">${esc(c)}</option>`);
   el("equipoFiltro").innerHTML=opts;
@@ -590,15 +562,12 @@ function initTeamConfig(){
   });
 }
 function init(){
-  // filtros de estado
   el("estadoFiltro").innerHTML='<option value="">Todos los estados</option>'+STATES.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
-  // sectores
   Array.from(new Set(DATA.map(r=>r.sector||"Sin sector"))).sort((a,b)=>a.localeCompare(b)).forEach(s=>{
     let o=document.createElement("option");o.value=s;o.textContent=s;el("sector").appendChild(o);
   });
   initTeamConfig();
   refreshEquipoFilterOptions();
-
   ["q","sector","cisterna","critico","estadoFiltro","equipoFiltro"].forEach(id=>{
     el(id).addEventListener(id==="q"?"input":"change",()=>{quickFilter="";applyFilters();});
   });
